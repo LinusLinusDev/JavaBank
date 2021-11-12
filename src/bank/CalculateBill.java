@@ -6,5 +6,5 @@ package bank;
  * @author Linus Palm
  */
 public interface CalculateBill {
-    public double calculate();
+    double calculate();
 }
