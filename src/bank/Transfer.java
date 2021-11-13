@@ -108,6 +108,6 @@ public class Transfer extends Transaction {
         if (this == other) return true;
         if (!(other instanceof Transfer)) return false;
         Transfer that = (Transfer) other;
-        return super.equals(other) && this.sender == that.sender && this.recipient == that.recipient;
+        return super.equals(other) && this.getSender().equals(that.getSender()) && this.getRecipient().equals(that.getRecipient());
     }
 }

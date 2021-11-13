@@ -1,4 +1,7 @@
 package bank.exceptions;
 
-public class TransactionAlreadyExistException {
+public class TransactionAlreadyExistException extends Exception {
+    public TransactionAlreadyExistException () {
+        super("Transaction already exist.");
+    }
 }

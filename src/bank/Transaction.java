@@ -106,7 +106,7 @@ public abstract class Transaction implements CalculateBill{
      */
     public boolean equals(Object other) {
         Transaction that = (Transaction) other;
-        return this.getDate() == that.getDate() && this.getAmount() == that.getAmount() && this.getDescription() == that.getDescription();
+        return this.getDate().equals(that.getDate()) && this.getAmount() == that.getAmount() && this.getDescription().equals(that.getDescription());
     }
 
     /**
