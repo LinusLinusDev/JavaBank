@@ -1,7 +1,4 @@
-import bank.Payment;
-import bank.PrivateBank;
-import bank.Transaction;
-import bank.Transfer;
+import bank.*;
 import bank.exceptions.AccountAlreadyExistsException;
 import bank.exceptions.AccountDoesNotExistException;
 import bank.exceptions.TransactionAlreadyExistException;
@@ -110,5 +107,37 @@ public class Main {
         }
 
         System.out.println("Nach der remove-Methode sollte es wieder true sein: " + bank.equals(bank3));
+
+        /**
+         * Testen der getTransactions-Methoden
+         */
+        try {
+            bank.addTransaction("Linus",a);
+            bank.addTransaction("Linus",c);
+            bank.addTransaction("Linus",e);
+            bank.addTransaction("Linus",f);
+        } catch (AccountDoesNotExistException ex1) {
+            ex1.printStackTrace();
+        } catch (TransactionAlreadyExistException ex2) {
+            ex2.printStackTrace();
+        }
+        arrayliste = bank.getTransactions("Linus");
+        arrayliste = bank.getTransactionsByType("Linus",true);
+        arrayliste = bank.getTransactionsByType("Linus",false);
+        arrayliste = bank.getTransactionsSorted("Linus",true);
+        arrayliste = bank.getTransactionsSorted("Linus",false);
+
+        /**
+         * Testen der getAccountBalance-Methoden
+         */
+        PrivateBankAlt bankAlt = new PrivateBankAlt("Sparkasse",0.01,0.05);
+        try {
+            bankAlt.createAccount("Opa",arrayliste);
+        } catch (AccountAlreadyExistsException ex) {
+            ex.printStackTrace();
+        }
+
+        System.out.println("getAccountBalance PrivateBank: ");
+        System.out.println("getAccountBalance PrivateBankAlt: " + bankAlt.getAccountBalance("Opa"));
     }
 }

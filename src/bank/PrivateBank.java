@@ -33,7 +33,8 @@ public class PrivateBank implements Bank {
     /**
      * Verknüpfung von Konten mit Transaktionen
      */
-    private Map<String, ArrayList<Transaction>> accountsToTransactions = new HashMap<String, ArrayList<Transaction>>();
+    private Map<String, ArrayList<Transaction>> accountsToTransactions = new HashMap<>();
+    // HashMap und ArrayList, da Map und List Interfaces sind. HashMap und ArrayList implementieren diese.
 
     /**
      * Konstruktor, initialisiert alle Attribute mit den übergebenen Parametern
@@ -132,11 +133,11 @@ public class PrivateBank implements Bank {
         if (this == other) return true;
         if (!(other instanceof PrivateBank)) return false;
         PrivateBank that = (PrivateBank) other;
-        return this.getName() == that.getName() && this.getIncomingInterest() == that.getIncomingInterest() && this.getOutgoingInterest() == that.getOutgoingInterest() && this.accountsToTransactions.equals(that.accountsToTransactions);
+        return this.getName().equals(that.getName()) && this.getIncomingInterest() == that.getIncomingInterest() && this.getOutgoingInterest() == that.getOutgoingInterest() && this.accountsToTransactions.equals(that.accountsToTransactions);
     }
 
     /**
-     * Fügt einen neues Konto zu der Bank hinzu. Sollte das Konto bereits existieren, wird eine Exception geworfen.
+     * Fügt ein neues Konto zu der Bank hinzu. Sollte das Konto bereits existieren, wird eine Exception geworfen.
      *
      * @param account das Konto, das hinzugefügt werden soll
      * @throws AccountAlreadyExistsException sollte das Konto bereits existieren
@@ -147,7 +148,7 @@ public class PrivateBank implements Bank {
     }
 
     /**
-     * Fügt einen neues Konto (inklusive einer Liste von Transaktionen) zu der Bank hinzu. Sollte das Konto bereits existieren, wird eine Exception geworfen.
+     * Fügt ein neues Konto (inklusive einer Liste von Transaktionen) zu der Bank hinzu. Sollte das Konto bereits existieren, wird eine Exception geworfen.
      *
      * @param account das Konto, das hinzugefügt werden soll
      * @throws AccountAlreadyExistsException sollte das Konto bereits existieren
@@ -158,9 +159,7 @@ public class PrivateBank implements Bank {
         for(Transaction n : transactions){
             try {
                 this.addTransaction(account,n);
-            } catch (TransactionAlreadyExistException e) {
-                e.printStackTrace();
-            } catch (AccountDoesNotExistException e) {
+            } catch (TransactionAlreadyExistException | AccountDoesNotExistException e) {
                 e.printStackTrace();
             }
         }
@@ -190,7 +189,7 @@ public class PrivateBank implements Bank {
     /**
      * Entfernt eine Transaktion von einem Konto. Sollte die Transaktion nicht existieren, wird eine Exception geworfen.
      *
-     * @param account     das Konto, von dem die Transaktion entfernt werden soll
+     * @param account     das Konto, aus dem die Transaktion entfernt werden soll
      * @param transaction die Transaktion, die von dem Konto entfernt werden soll
      * @throws TransactionDoesNotExistException sollte die Transaktion nicht existieren
      */
@@ -198,7 +197,7 @@ public class PrivateBank implements Bank {
         if(!accountsToTransactions.get(account).contains(transaction)) throw new TransactionDoesNotExistException();
         accountsToTransactions.get(account).remove(transaction);
     }
-    // Wenn vorher hinzugefügte Payment Methode entfernt werden soll, ist das wegen überschreibung der Zinssätze nicht möglich. Gewollt?
+    // Wenn vorher hinzugefügte Payment Methode entfernt werden soll, ist das wegen Überschreibung der Zinssätze nicht möglich. Gewollt?
     // Account does not exists - Exception?
 
     /**
@@ -243,7 +242,15 @@ public class PrivateBank implements Bank {
      * @return sortierte Liste der Transaktionen
      */
     public ArrayList<Transaction> getTransactionsSorted(String account, boolean asc) {
-        return null;
+        ArrayList<Transaction> list = new ArrayList<>(accountsToTransactions.get(account));
+        list.sort((transaction1, transaction2) -> {
+            if (asc) {
+                return (int) (transaction1.calculate() - transaction2.calculate());
+            } else {
+                return (int) (transaction2.calculate() - transaction1.calculate());
+            }
+        });
+        return list;
     }
     // Account does not exists - Exception?
 
@@ -255,7 +262,18 @@ public class PrivateBank implements Bank {
      * @return Liste der Transaktionen
      */
     public ArrayList<Transaction> getTransactionsByType(String account, boolean positive) {
-        return null;
+        ArrayList<Transaction> list = new ArrayList<>();
+        if(positive){
+            for(Transaction n:accountsToTransactions.get(account)){
+                if(n.calculate()>=0)list.add(n);
+            }
+        }
+        else{
+            for(Transaction n:accountsToTransactions.get(account)){
+                if(n.calculate()<0)list.add(n);
+            }
+        }
+        return list;
     }
     // Account does not exists - Exception?
 }
