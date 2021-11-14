@@ -37,9 +37,11 @@ public class Main {
         /**
          * Testen aller Konstruktoren der Klasse Transfer
          */
-        Transfer e = new Transfer("13.10.2021",2.5,"TestTest");
-        Transfer f = new Transfer("24.04.2021", 50.0,"Geburtstagsgeschenk von Opa","Opa","Linus");
-        Transfer g = new Transfer(f);
+        IncomingTransfer e = new IncomingTransfer("13.10.2021",2.5,"TestTest");
+        OutgoingTransfer f = new OutgoingTransfer("24.04.2021", 50.0,"Geburtstagsgeschenk von Opa","Opa","Linus");
+        OutgoingTransfer g = new OutgoingTransfer(f);
+        Transfer eX = new Transfer("13.10.2021",2.5,"TestTest");
+        Transfer fX = new Transfer("24.04.2021", 50.0,"Geburtstagsgeschenk von Opa","Opa","Linus");
 
         /**
          * Testen der Ausgabe der Klasse Transfer, ermöglicht Kontrolle des Ergebnisses der calculate()-Methode
@@ -130,14 +132,20 @@ public class Main {
         /**
          * Testen der getAccountBalance-Methoden
          */
-        PrivateBankAlt bankAlt = new PrivateBankAlt("Sparkasse",0.01,0.05);
+        PrivateBankAlt bankAlt = new PrivateBankAlt("Sparkasse",0.1,0.2);
         try {
-            bankAlt.createAccount("Opa",arrayliste);
-        } catch (AccountAlreadyExistsException ex) {
+            bankAlt.createAccount("Opa");
+            bankAlt.addTransaction("Opa",a);
+            bankAlt.addTransaction("Opa",b);
+            bankAlt.addTransaction("Opa",c);
+            bankAlt.addTransaction("Opa",eX);
+            bankAlt.addTransaction("Opa",fX);
+
+        } catch (AccountAlreadyExistsException | TransactionAlreadyExistException | AccountDoesNotExistException ex) {
             ex.printStackTrace();
         }
 
-        System.out.println("getAccountBalance PrivateBank: ");
+        System.out.println("getAccountBalance PrivateBank: " + bank.getAccountBalance("Linus"));
         System.out.println("getAccountBalance PrivateBankAlt: " + bankAlt.getAccountBalance("Opa"));
     }
 }

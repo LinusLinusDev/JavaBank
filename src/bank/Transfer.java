@@ -44,15 +44,6 @@ public class Transfer extends Transaction {
     }
 
     /**
-     * Copy-Konstruktor, initialisiert alle Attribute mit den Werten des entsprechenden Attributes des übergebenen Objekts
-     *
-     * @param other zu kopierendes Objekt der Klasse Transfer
-     */
-    public Transfer(Transfer other){
-        this(other.getDate(), other.getAmount(), other.getDescription(), other.getSender(), other.getRecipient());
-    }
-
-    /**
      * Gettermethode
      *
      * @return Sender des Geldes

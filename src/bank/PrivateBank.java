@@ -219,7 +219,11 @@ public class PrivateBank implements Bank {
      * @return der aktuelle Kontostand
      */
     public double getAccountBalance(String account) {
-        return 0.;
+        double sum = 0.;
+        for(Transaction n:accountsToTransactions.get(account)){
+            sum += n.calculate();
+        }
+        return sum;
     }
     // Account does not exists - Exception?
 
