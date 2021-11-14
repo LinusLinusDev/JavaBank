@@ -9,11 +9,11 @@ import java.util.*;
 
 /**
  * Klasse die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
- * In dieser Klasse ist getAccountBalance mittels Vererbung implementiert.
+ * In dieser Klasse ist getAccountBalance mittels instanceof/Type-Casting implementiert.
  *
  * @author Linus Palm
  */
-public class PrivateBank implements Bank {
+public class PrivateBankAlt implements Bank {
 
     /**
      * Name der Bank
@@ -42,7 +42,7 @@ public class PrivateBank implements Bank {
      * @param incomingInterest Zinsen, die bei einer Einzahlung anfallen
      * @param outgoingInterest Zinsen, die bei einer Auszahlung anfallen
      */
-    public PrivateBank(String name, double incomingInterest, double outgoingInterest){
+    public PrivateBankAlt(String name, double incomingInterest, double outgoingInterest){
         setName(name);
         setIncomingInterest(incomingInterest);
         setOutgoingInterest(outgoingInterest);
@@ -53,7 +53,7 @@ public class PrivateBank implements Bank {
      *
      * @param other zu kopierendes Objekt der Klasse PrivateBank
      */
-    public PrivateBank(PrivateBank other){
+    public PrivateBankAlt(PrivateBank other){
         this(other.getName(), other.getIncomingInterest(), other.getOutgoingInterest());
     }
 
@@ -130,8 +130,8 @@ public class PrivateBank implements Bank {
      */
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (!(other instanceof PrivateBank)) return false;
-        PrivateBank that = (PrivateBank) other;
+        if (!(other instanceof PrivateBankAlt)) return false;
+        PrivateBankAlt that = (PrivateBankAlt) other;
         return this.getName() == that.getName() && this.getIncomingInterest() == that.getIncomingInterest() && this.getOutgoingInterest() == that.getOutgoingInterest() && this.accountsToTransactions.equals(that.accountsToTransactions);
     }
 
@@ -220,7 +220,14 @@ public class PrivateBank implements Bank {
      * @return der aktuelle Kontostand
      */
     public double getAccountBalance(String account) {
-        return 0.;
+        double sum = 0;
+        for(Transaction n:accountsToTransactions.get(account)){
+            if(n instanceof Transfer && account.equals(((Transfer) n).getSender())){
+                sum -= n.calculate();
+            }
+            else sum += n.calculate();
+        }
+        return sum;
     }
     // Account does not exists - Exception?
 
