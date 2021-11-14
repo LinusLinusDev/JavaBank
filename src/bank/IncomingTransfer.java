@@ -34,13 +34,4 @@ public class IncomingTransfer extends Transfer {
     public IncomingTransfer(Transfer other){
         this(other.getDate(), other.getAmount(), other.getDescription(), other.getSender(), other.getRecipient());
     }
-
-    /**
-     * Methode zur Berechnung, des zu verbuchenden Geldbetrages bei einer eingehenden Überweisung
-     *
-     * @return Errechneter Betrag
-     */
-    public double calculate() {
-        return super.calculate();
-    }
 }
