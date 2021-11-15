@@ -51,7 +51,7 @@ public class Main {
         //System.out.println(g);
 
         /**
-         * Testen der Konstruktoren und Ausgabemethode von PrivateBank
+         * Testen der Konstruktoren und Ausgabemethode mit leerer Map von PrivateBank
          */
         PrivateBank bank = new PrivateBank("Aachener Bank",0.1,0.2);
         PrivateBank bank2 = bank;
@@ -147,5 +147,15 @@ public class Main {
 
         System.out.println("getAccountBalance PrivateBank: " + bank.getAccountBalance("Linus"));
         System.out.println("getAccountBalance PrivateBankAlt: " + bankAlt.getAccountBalance("Opa"));
+
+        /**
+         * Testen der Ausgabefunktion mit nicht leerer Map
+         */
+        try {
+            bank.createAccount("Oma", arrayliste);
+        } catch (AccountAlreadyExistsException ex) {
+            ex.printStackTrace();
+        }
+        System.out.print(bank);
     }
 }

@@ -119,7 +119,14 @@ public class PrivateBankAlt implements Bank {
      * @return Liste aller Attribute mit ihren Werten als String
      */
     public String toString(){
-        return "Name der Bank: "+ getName() + "\nAnfallende Zinsen bei Einzahlung: " + getIncomingInterest()*100 + " %" + "\nAnfallende Zinsen bei Auszahlung: " + getOutgoingInterest()*100 + " %";
+        String accountsAndTransactions = "\nTransaktionen: \n\n";
+        for(var n:accountsToTransactions.entrySet()) {
+            accountsAndTransactions += "- Account: " + n.getKey() + "\n";
+            for(Transaction t:n.getValue()){
+                accountsAndTransactions += t + "\n\n";
+            }
+        }
+        return "Name der Bank: "+ getName() + "\nAnfallende Zinsen bei Einzahlung: " + getIncomingInterest()*100 + " %" + "\nAnfallende Zinsen bei Auszahlung: " + getOutgoingInterest()*100 + " %" + accountsAndTransactions;
     }
     // Inhalt der Map ebenfalls ausgeben?
 
