@@ -200,6 +200,7 @@ public class PrivateBank implements Bank {
      * @throws TransactionDoesNotExistException sollte die Transaktion nicht existieren
      */
     public void removeTransaction(String account, Transaction transaction) throws TransactionDoesNotExistException {
+        //instance of ...
         if(!accountsToTransactions.get(account).contains(transaction)) throw new TransactionDoesNotExistException();
         accountsToTransactions.get(account).remove(transaction);
     }
