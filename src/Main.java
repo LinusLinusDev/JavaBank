@@ -1,9 +1,7 @@
 import bank.*;
-import bank.exceptions.AccountAlreadyExistsException;
-import bank.exceptions.AccountDoesNotExistException;
-import bank.exceptions.TransactionAlreadyExistException;
-import bank.exceptions.TransactionDoesNotExistException;
+import bank.exceptions.*;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -62,7 +60,7 @@ public class Main {
          * Testen der createAccount- und addTransactions-Methode inkl. Exceptions und equals-Methode von PrivateBank
          */
         PrivateBank bank3 = new PrivateBank("Aachener Bank",0.1,0.2);
-        ArrayList<Transaction> arrayliste = new ArrayList<Transaction>();
+        List<Transaction> arrayliste = new ArrayList<Transaction>();
         arrayliste.add(b);
         try {
             bank.createAccount("Linus");

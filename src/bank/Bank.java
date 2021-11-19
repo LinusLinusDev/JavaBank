@@ -5,7 +5,7 @@ import bank.exceptions.AccountAlreadyExistsException;
 import bank.exceptions.TransactionAlreadyExistException;
 import bank.exceptions.TransactionDoesNotExistException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface for a generic bank. Provides multiple methods to handle the interaction between
@@ -28,7 +28,7 @@ public interface Bank {
      * @param account the account to be added
      * @throws AccountAlreadyExistsException if the account already exists
      */
-    void createAccount(String account, ArrayList<Transaction> transactions)
+    void createAccount(String account, List<Transaction> transactions)
             throws AccountAlreadyExistsException;
 
     /**
@@ -38,7 +38,6 @@ public interface Bank {
      * @param account     the account to which the transaction is added
      * @param transaction the transaction which is added to the account
      * @throws TransactionAlreadyExistException if the transaction already exists
-     * @throws AccountDoesNotExistException if the account cannot be found
      */
     void addTransaction(String account, Transaction transaction)
             throws TransactionAlreadyExistException, AccountDoesNotExistException;
@@ -76,7 +75,7 @@ public interface Bank {
      * @param account the selected account
      * @return the list of transactions
      */
-    ArrayList<Transaction> getTransactions(String account);
+    List<Transaction> getTransactions(String account);
 
     /**
      * Returns a sorted list (-> calculated amounts) of transactions for a specific account . Sorts the list either in ascending or descending order
@@ -86,7 +85,7 @@ public interface Bank {
      * @param asc     selects if the transaction list is sorted ascending or descending
      * @return the list of transactions
      */
-    ArrayList<Transaction> getTransactionsSorted(String account, boolean asc);
+    List<Transaction> getTransactionsSorted(String account, boolean asc);
 
     /**
      * Returns a list of either positive or negative transactions (-> calculated amounts).
@@ -95,5 +94,5 @@ public interface Bank {
      * @param positive selects if positive  or negative transactions are listed
      * @return the list of transactions
      */
-    ArrayList<Transaction> getTransactionsByType(String account, boolean positive);
+    List<Transaction> getTransactionsByType(String account, boolean positive);
 }

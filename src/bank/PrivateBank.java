@@ -1,11 +1,10 @@
 package bank;
 
-import bank.exceptions.AccountAlreadyExistsException;
-import bank.exceptions.AccountDoesNotExistException;
-import bank.exceptions.TransactionAlreadyExistException;
-import bank.exceptions.TransactionDoesNotExistException;
-
-import java.util.*;
+import bank.exceptions.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Klasse die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
@@ -33,7 +32,7 @@ public class PrivateBank implements Bank {
     /**
      * Verknüpfung von Konten mit Transaktionen
      */
-    private Map<String, ArrayList<Transaction>> accountsToTransactions = new HashMap<>();
+    private Map<String, List<Transaction>> accountsToTransactions = new HashMap<>();
     // HashMap und ArrayList, da Map und List Interfaces sind. HashMap und ArrayList implementieren diese.
 
     /**
@@ -159,7 +158,7 @@ public class PrivateBank implements Bank {
      * @param account das Konto, das hinzugefügt werden soll
      * @throws AccountAlreadyExistsException sollte das Konto bereits existieren
      */
-    public void createAccount(String account, ArrayList<Transaction> transactions) throws AccountAlreadyExistsException {
+    public void createAccount(String account, List<Transaction> transactions) throws AccountAlreadyExistsException {
         if(accountsToTransactions.containsKey(account))throw new AccountAlreadyExistsException();
         accountsToTransactions.put(account, new ArrayList<>());
         for(Transaction n : transactions){
@@ -246,7 +245,7 @@ public class PrivateBank implements Bank {
      * @param account ausgewähltes Konto
      * @return Liste der Transaktionen
      */
-    public ArrayList<Transaction> getTransactions(String account){
+    public List<Transaction> getTransactions(String account){
         return accountsToTransactions.get(account);
     }
     // Account does not exists - Exception?
@@ -258,8 +257,8 @@ public class PrivateBank implements Bank {
      * @param asc     Auswahl, ob die Liste aufsteigend oder absteigend zurückgegeben werden soll
      * @return sortierte Liste der Transaktionen
      */
-    public ArrayList<Transaction> getTransactionsSorted(String account, boolean asc) {
-        ArrayList<Transaction> list = new ArrayList<>(accountsToTransactions.get(account));
+    public List<Transaction> getTransactionsSorted(String account, boolean asc) {
+        List<Transaction> list = new ArrayList<>(accountsToTransactions.get(account));
         list.sort((transaction1, transaction2) -> {
             if (asc) {
                 return (int) (transaction1.calculate() - transaction2.calculate());
@@ -278,8 +277,8 @@ public class PrivateBank implements Bank {
      * @param positive Auswahl, ob in der Liste positive oder negative Transaktionen vorkommen sollen
      * @return Liste der Transaktionen
      */
-    public ArrayList<Transaction> getTransactionsByType(String account, boolean positive) {
-        ArrayList<Transaction> list = new ArrayList<>();
+    public List<Transaction> getTransactionsByType(String account, boolean positive) {
+        List<Transaction> list = new ArrayList<>();
         if(positive){
             for(Transaction n:accountsToTransactions.get(account)){
                 if(n.calculate()>=0)list.add(n);
