@@ -82,7 +82,7 @@ public class Main {
         System.out.println("Test mit anderem Objekt, mit gleichen Attributwerten: " + bank.equals(bank3));
 
         try {
-            bank.addTransaction("Linus",e);
+            bank.addTransaction("Linus",c);
 
         } catch (AccountDoesNotExistException ex1) {
             ex1.printStackTrace();
@@ -95,20 +95,20 @@ public class Main {
         /**
          * Testen der containsTransaction-Methode
          */
-        System.out.println("Test von containsTransaction ist true: " + bank.containsTransaction("Linus",e));
-        System.out.println("Test von containsTransaction ist false: " + bank.containsTransaction("Linus",d));
+        System.out.println("Test von containsTransaction ist true: " + bank.containsTransaction("Linus",c));
+        System.out.println("Test von containsTransaction ist false: " + bank.containsTransaction("Linus",e));
 
         /**
          * Testen der removeTransaction Methode inkl. Exception
          */
         try {
-            bank.removeTransaction("Linus",e);
+            bank.removeTransaction("Linus",c);
             //bank.removeTransaction("Linus",a); // Transaction does not exists.
         } catch (TransactionDoesNotExistException ex) {
             ex.printStackTrace();
         }
 
-        System.out.println("Nach der remove-Methode sollte es wieder true sein: " + bank.equals(bank3));
+        System.out.println("Nach der remove-Methode sollten die Attributwerte wieder gleich sein: " + bank.equals(bank3));
 
         /**
          * Testen der getTransactions-Methoden

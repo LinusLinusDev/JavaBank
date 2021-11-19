@@ -200,11 +200,13 @@ public class PrivateBank implements Bank {
      * @throws TransactionDoesNotExistException sollte die Transaktion nicht existieren
      */
     public void removeTransaction(String account, Transaction transaction) throws TransactionDoesNotExistException {
-        //instance of ...
+        if(transaction instanceof Payment){
+            ((Payment) transaction).setIncomingInterest(this.getIncomingInterest());
+            ((Payment) transaction).setOutgoingInterest(this.getOutgoingInterest());
+        }
         if(!accountsToTransactions.get(account).contains(transaction)) throw new TransactionDoesNotExistException();
         accountsToTransactions.get(account).remove(transaction);
     }
-    // Wenn vorher hinzugefügte Payment Methode entfernt werden soll, ist das wegen Überschreibung der Zinssätze nicht möglich. Gewollt?
     // Account does not exists - Exception?
 
     /**
@@ -215,6 +217,10 @@ public class PrivateBank implements Bank {
      * @return Wahrheitswert, ob die Transaktion vorkommt
      */
     public boolean containsTransaction(String account, Transaction transaction) {
+        if(transaction instanceof Payment){
+            ((Payment) transaction).setIncomingInterest(this.getIncomingInterest());
+            ((Payment) transaction).setOutgoingInterest(this.getOutgoingInterest());
+        }
         return accountsToTransactions.get(account).contains(transaction);
     }
     // Account does not exists - Exception?

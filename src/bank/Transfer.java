@@ -5,7 +5,7 @@ package bank;
  *
  * @author Linus Palm
  */
-public class Transfer extends Transaction {
+public class Transfer extends Transaction { //Sollte eigentlich abstract sein, aber da getAccountBalance von PrivateBankAlt noch vorgeführt werden soll noch nicht
 
     /**
      * Sender des Geldes
