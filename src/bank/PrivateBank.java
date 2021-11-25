@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Klasse die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
+ * Klasse, die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
  * In dieser Klasse ist getAccountBalance mittels Vererbung implementiert.
  *
  * @author Linus Palm
@@ -33,7 +33,11 @@ public class PrivateBank implements Bank {
      * Verknüpfung von Konten mit Transaktionen
      */
     private Map<String, List<Transaction>> accountsToTransactions = new HashMap<>();
-    // HashMap und ArrayList, da Map und List Interfaces sind. HashMap und ArrayList implementieren diese.
+
+    /**
+     * Speicherort der Konten
+     */
+    private String directoryName = "";
 
     /**
      * Konstruktor, initialisiert alle Attribute mit den übergebenen Parametern
@@ -41,11 +45,13 @@ public class PrivateBank implements Bank {
      * @param name Name der Bank
      * @param incomingInterest Zinsen, die bei einer Einzahlung anfallen
      * @param outgoingInterest Zinsen, die bei einer Auszahlung anfallen
+     * @param directoryName Speicherort der Konten
      */
-    public PrivateBank(String name, double incomingInterest, double outgoingInterest){
+    public PrivateBank(String name, double incomingInterest, double outgoingInterest, String directoryName){
         setName(name);
         setIncomingInterest(incomingInterest);
         setOutgoingInterest(outgoingInterest);
+        setDirectoryName(directoryName);
     }
 
     /**
@@ -54,7 +60,7 @@ public class PrivateBank implements Bank {
      * @param other zu kopierendes Objekt der Klasse PrivateBank
      */
     public PrivateBank(PrivateBank other){
-        this(other.getName(), other.getIncomingInterest(), other.getOutgoingInterest());
+        this(other.getName(), other.getIncomingInterest(), other.getOutgoingInterest(), other.getDirectoryName());
     }
 
     /**
@@ -84,6 +90,14 @@ public class PrivateBank implements Bank {
         return outgoingInterest;
     }
 
+    /**
+     * Gettermethode
+     *
+     * @return Speicherort der Konten
+     */
+    public String getDirectoryName(){
+        return directoryName;
+    }
 
     /**
      * Settermethode
@@ -113,6 +127,15 @@ public class PrivateBank implements Bank {
     }
 
     /**
+     * Settermethode
+     *
+     * @param directoryName Speicherort der Konten
+     */
+    public void setDirectoryName(String directoryName) {
+        this.directoryName = directoryName;
+    }
+
+    /**
      * Ausgabemethode
      *
      * @return Liste aller Attribute mit ihren Werten als String
@@ -125,7 +148,7 @@ public class PrivateBank implements Bank {
                 accountsAndTransactions += t + "\n\n";
             }
         }
-        return "Name der Bank: "+ getName() + "\nAnfallende Zinsen bei Einzahlung: " + getIncomingInterest()*100 + " %" + "\nAnfallende Zinsen bei Auszahlung: " + getOutgoingInterest()*100 + " %" + accountsAndTransactions;
+        return "Name der Bank: "+ getName() + "\nAnfallende Zinsen bei Einzahlung: " + getIncomingInterest()*100 + " %" + "\nAnfallende Zinsen bei Auszahlung: " + getOutgoingInterest()*100 + " %" + "\nSpeicherort: " + getDirectoryName() + accountsAndTransactions;
     }
 
     /**
@@ -138,7 +161,7 @@ public class PrivateBank implements Bank {
         if (this == other) return true;
         if (!(other instanceof PrivateBank)) return false;
         PrivateBank that = (PrivateBank) other;
-        return this.getName().equals(that.getName()) && this.getIncomingInterest() == that.getIncomingInterest() && this.getOutgoingInterest() == that.getOutgoingInterest() && this.accountsToTransactions.equals(that.accountsToTransactions);
+        return this.getName().equals(that.getName()) && this.getIncomingInterest() == that.getIncomingInterest() && this.getOutgoingInterest() == that.getOutgoingInterest() && this.accountsToTransactions.equals(that.accountsToTransactions) && this.getDirectoryName().equals(that.getDirectoryName());
     }
 
     /**
@@ -206,7 +229,6 @@ public class PrivateBank implements Bank {
         if(!accountsToTransactions.get(account).contains(transaction)) throw new TransactionDoesNotExistException();
         accountsToTransactions.get(account).remove(transaction);
     }
-    // Account does not exists - Exception?
 
     /**
      * Prüft, ob die angegebene Transaktion in dem angegebenen Konto vorkommt
@@ -222,7 +244,6 @@ public class PrivateBank implements Bank {
         }
         return accountsToTransactions.get(account).contains(transaction);
     }
-    // Account does not exists - Exception?
 
     /**
      * Berechnet den aktuellen Kontostand
@@ -237,7 +258,6 @@ public class PrivateBank implements Bank {
         }
         return sum;
     }
-    // Account does not exists - Exception?
 
     /**
      * Gibt eine Liste mit allen Transaktionen eines Kontos zurück
@@ -248,7 +268,6 @@ public class PrivateBank implements Bank {
     public List<Transaction> getTransactions(String account){
         return accountsToTransactions.get(account);
     }
-    // Account does not exists - Exception?
 
     /**
      * Gibt eine nach der Geldmenge sortierte Liste aller Transaktionen eines Kontos zurück. Sortiert die Liste entweder auf- oder absteigend
@@ -268,7 +287,6 @@ public class PrivateBank implements Bank {
         });
         return list;
     }
-    // Account does not exists - Exception?
 
     /**
      * Gibt eine Liste aller positiven oder negativen Transaktionen zurück
@@ -291,5 +309,4 @@ public class PrivateBank implements Bank {
         }
         return list;
     }
-    // Account does not exists - Exception?
 }

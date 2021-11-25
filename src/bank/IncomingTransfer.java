@@ -1,5 +1,11 @@
 package bank;
 
+
+/**
+ * Klasse, die eingehende Überweisungen abstrahiert. Erbt von der Klasse {@link Transfer}
+ *
+ * @author Linus Palm
+ */
 public class IncomingTransfer extends Transfer {
 
     /**

@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- *  Klasse Main, welche die main-Methode liefert
+ *  Klasse Test_P1_bis_P3, welche eine main-Methode liefert, in der die Funktionalität der Implementierungen der ersten drei Praktika getestet werden kann.
  *
  * @author Linus Palm
  */
-public class Main {
+public class Test_P1_bis_P3 {
 
     /**
      * main-Methode fungiert als Einstiegspunkt für die folgenden Tests
@@ -51,7 +51,7 @@ public class Main {
         /**
          * Testen der Konstruktoren und Ausgabemethode mit leerer Map von PrivateBank
          */
-        PrivateBank bank = new PrivateBank("Aachener Bank",0.1,0.2);
+        PrivateBank bank = new PrivateBank("Aachener Bank",0.1,0.2,"null");
         PrivateBank bank2 = bank;
         System.out.println(bank);
         System.out.println(bank2);
@@ -59,7 +59,7 @@ public class Main {
         /**
          * Testen der createAccount- und addTransactions-Methode inkl. Exceptions und equals-Methode von PrivateBank
          */
-        PrivateBank bank3 = new PrivateBank("Aachener Bank",0.1,0.2);
+        PrivateBank bank3 = new PrivateBank("Aachener Bank",0.1,0.2,"null");
         List<Transaction> arrayliste = new ArrayList<Transaction>();
         arrayliste.add(b);
         try {

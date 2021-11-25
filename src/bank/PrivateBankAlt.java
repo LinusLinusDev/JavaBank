@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Klasse die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
+ * Klasse, die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
  * In dieser Klasse ist getAccountBalance mittels instanceof/Type-Casting implementiert.
  *
  * @author Linus Palm

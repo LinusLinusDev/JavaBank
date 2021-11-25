@@ -1,7 +1,7 @@
 package bank;
 
 /**
- * Klasse für Überweisungen erbt von der Klasse {@link Transaction}
+ * Klasse, die Überweisungen abstrahiert. Erbt von der Klasse {@link Transaction}
  *
  * @author Linus Palm
  */
