@@ -1,13 +1,8 @@
 package bank;
 
 import bank.exceptions.AccountAlreadyExistsException;
-import bank.exceptions.AccountDoesNotExistException;
-import bank.exceptions.TransactionAlreadyExistException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
