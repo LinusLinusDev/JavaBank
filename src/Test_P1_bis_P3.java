@@ -51,7 +51,7 @@ public class Test_P1_bis_P3 {
         /**
          * Testen der Konstruktoren und Ausgabemethode mit leerer Map von PrivateBank
          */
-        PrivateBank bank = new PrivateBank("Aachener Bank",0.1,0.2,"null");
+        PrivateBank bank = new PrivateBank("Aachener Bank",0.1,0.2,"");
         PrivateBank bank2 = bank;
         System.out.println(bank);
         System.out.println(bank2);
@@ -59,7 +59,7 @@ public class Test_P1_bis_P3 {
         /**
          * Testen der createAccount- und addTransactions-Methode inkl. Exceptions und equals-Methode von PrivateBank
          */
-        PrivateBank bank3 = new PrivateBank("Aachener Bank",0.1,0.2,"null");
+        PrivateBank bank3 = new PrivateBank("Aachener Bank",0.1,0.2,"");
         List<Transaction> arrayliste = new ArrayList<Transaction>();
         arrayliste.add(b);
         try {

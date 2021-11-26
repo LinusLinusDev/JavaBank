@@ -1,6 +1,16 @@
 package bank;
 
 import bank.exceptions.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -47,7 +57,7 @@ public class PrivateBank implements Bank {
      * @param outgoingInterest Zinsen, die bei einer Auszahlung anfallen
      * @param directoryName Speicherort der Konten
      */
-    public PrivateBank(String name, double incomingInterest, double outgoingInterest, String directoryName){
+    public PrivateBank(String name, double incomingInterest, double outgoingInterest, String directoryName) {
         setName(name);
         setIncomingInterest(incomingInterest);
         setOutgoingInterest(outgoingInterest);
@@ -127,12 +137,22 @@ public class PrivateBank implements Bank {
     }
 
     /**
-     * Settermethode
+     * Settermethode, erstellt ein Verzeichnis zum Speichern der persistierten Konten, falls der angegebene Speicherort nicht leer ist und liest persistierte Konten ein, falls das Verzeichnis bereits existiert.
      *
      * @param directoryName Speicherort der Konten
      */
     public void setDirectoryName(String directoryName) {
-        this.directoryName = directoryName;
+        if(directoryName!="") {
+            this.directoryName="D:\\Linus\\Projekte\\OOS\\savefiles\\" + directoryName;
+            File dir = new File(getDirectoryName());
+            if (dir.exists()) {
+                try {
+                    readAccounts();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else dir.mkdir();
+        }
     }
 
     /**
@@ -165,6 +185,74 @@ public class PrivateBank implements Bank {
     }
 
     /**
+     * Liest alle vorhandenen Konten und deren Transaktionen aus dem Dateisystem ein und stellt sie dem PrivateBank-Objekt in accountsToTransactions zur Verfügung.
+     *
+     * @throws IOException wird geworfen, wenn kein entsprechendes Verzeichnis existiert.
+     */
+    private void readAccounts() throws IOException {
+        accountsToTransactions.clear();
+        File dir = new File(getDirectoryName());
+        File[] fileArray = dir.listFiles();
+        for(File file:fileArray){
+            if (file.getName().startsWith("Konto ") && file.getName().endsWith(".json")){
+                String input = Files.readString(Paths.get(file.getPath()));
+                String name = file.getName().substring(6,file.getName().lastIndexOf('.'));
+
+                if(input==""){
+                    accountsToTransactions.put(name,new ArrayList<Transaction>());
+                }
+
+                else {
+                    GsonBuilder deserializer = new GsonBuilder();
+                    deserializer.registerTypeAdapter(Transaction.class, new customDeserializer());
+                    Gson customDeserializer = deserializer.create();
+
+                    ArrayList<Transaction> transactions = customDeserializer.fromJson(input, new TypeToken<ArrayList<Transaction>>() {
+                    }.getType());
+
+
+                    accountsToTransactions.put(name, transactions);
+                }
+            }
+        }
+    }
+
+    /**
+     * Persistiert das angegebene Konto im Dateisystem, falls der angegebene Speicherort nicht leer ist.
+     *
+     * @param account Name des zu persistierenden Kontos
+     * @throws IOException wird geworfen, wenn kein entsprechendes Verzeichnis existiert.
+     */
+    private void writeAccount(String account) throws IOException {
+        if(getDirectoryName()=="")return;
+        File file = new File(directoryName);
+        if(!file.exists()) throw new IOException("Directory not found.");
+        file = new File(directoryName+"\\Konto "+account+".json");
+
+        if(!file.exists())file.createNewFile();
+        if(accountsToTransactions.get(account).isEmpty())return;
+
+        GsonBuilder serializer = new GsonBuilder();
+        serializer.registerTypeAdapter(Payment.class,new customSerializer());
+        serializer.registerTypeAdapter(IncomingTransfer.class,new customSerializer());
+        serializer.registerTypeAdapter(OutgoingTransfer.class,new customSerializer());
+        Gson customSerializer = serializer.create();
+
+        String output="[";
+
+        for(int i=0;i<accountsToTransactions.get(account).size();i++){
+            output += customSerializer.toJson(accountsToTransactions.get(account).get(i));
+            if(i<accountsToTransactions.get(account).size()-1)output += ",";
+        }
+
+        output += "]";
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        writer.write(output);
+        writer.close();
+    }
+
+    /**
      * Fügt ein neues Konto zu der Bank hinzu. Sollte das Konto bereits existieren, wird eine Exception geworfen.
      *
      * @param account das Konto, das hinzugefügt werden soll
@@ -173,6 +261,11 @@ public class PrivateBank implements Bank {
     public void createAccount(String account) throws AccountAlreadyExistsException {
         if(accountsToTransactions.containsKey(account))throw new AccountAlreadyExistsException();
         accountsToTransactions.put(account, new ArrayList<>());
+        try {
+            writeAccount(account);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -190,6 +283,11 @@ public class PrivateBank implements Bank {
             } catch (TransactionAlreadyExistException | AccountDoesNotExistException e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            writeAccount(account);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -212,6 +310,11 @@ public class PrivateBank implements Bank {
             accountsToTransactions.get(account).add(other);
         }
         else accountsToTransactions.get(account).add(transaction);
+        try {
+            writeAccount(account);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -228,6 +331,11 @@ public class PrivateBank implements Bank {
         }
         if(!accountsToTransactions.get(account).contains(transaction)) throw new TransactionDoesNotExistException();
         accountsToTransactions.get(account).remove(transaction);
+        try {
+            writeAccount(account);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
