@@ -1,5 +1,4 @@
-package bank;
-
+import bank.*;
 import bank.exceptions.AccountAlreadyExistsException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,13 +6,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args){
-        //PrivateBank Test = new PrivateBank("Test",1,1,"Test");
-        //List<Transaction> list = Test.getTransactions("Peter");
-        //try {
-        //    Test.createAccount("Linus",list);
-        //} catch (AccountAlreadyExistsException e) {
-        //   e.printStackTrace();
-        //}
+
     }
     static void serialisierenTest(){
         Payment x = new Payment("08.10.2021",-100,"Bargeldauszahlung am Freitag",0.04,0.03);

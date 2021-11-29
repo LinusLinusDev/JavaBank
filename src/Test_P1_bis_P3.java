@@ -1,6 +1,7 @@
 import bank.*;
 import bank.exceptions.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -75,6 +76,8 @@ public class Test_P1_bis_P3 {
             ex2.printStackTrace();
         } catch (TransactionAlreadyExistException ex3) {
             ex3.printStackTrace();
+        } catch (IOException ex4) {
+            ex4.printStackTrace();
         }
         System.out.println("Test mit gleichem Objekt: " + bank.equals(bank2));
         System.out.println("Test mit anderem Objekt, mit gleichen Attributwerten: " + bank.equals(bank3));
@@ -86,6 +89,8 @@ public class Test_P1_bis_P3 {
             ex1.printStackTrace();
         } catch (TransactionAlreadyExistException ex2) {
             ex2.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         System.out.println("Test mit anderem Objekt, mit anderen Attributwerten: " + bank.equals(bank3));
@@ -104,6 +109,8 @@ public class Test_P1_bis_P3 {
             //bank.removeTransaction("Linus",a); // Transaction does not exists.
         } catch (TransactionDoesNotExistException ex) {
             ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         System.out.println("Nach der remove-Methode sollten die Attributwerte wieder gleich sein: " + bank.equals(bank3));
@@ -120,6 +127,8 @@ public class Test_P1_bis_P3 {
             ex1.printStackTrace();
         } catch (TransactionAlreadyExistException ex2) {
             ex2.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         arrayliste = bank.getTransactions("Linus");
         arrayliste = bank.getTransactionsByType("Linus",true);
@@ -152,6 +161,8 @@ public class Test_P1_bis_P3 {
         try {
             bank.createAccount("Oma", arrayliste);
         } catch (AccountAlreadyExistsException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         System.out.print(bank);
