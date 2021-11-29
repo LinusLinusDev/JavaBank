@@ -1,20 +1,30 @@
 package bank;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testklasse, um Methoden der Klasse Transfer zu testen.
+ *
+ * @author Linus Palm
+ */
 class TransferTest {
+    /**
+     * Variable x, wird in allen Tests verwendet, um Funktion der Methoden zu prüfen
+     */
     Transfer x = new Transfer("01.01.2022",1000.0,"description","sender","recipient");
 
+    /**
+     * Initialisiere x vor jedem Test neu mit dem ursprünglichen Objekt
+     */
     @BeforeEach
     void init(){
         x = new Transfer("01.01.2022",1000.0,"description","sender","recipient");
     }
 
+    /**
+     * Testet, ob der Konstruktor die Werte wie erwartet zuweist.
+     */
     @Test
     void testConstructor() {
         assertNotNull(x);
@@ -25,6 +35,9 @@ class TransferTest {
         assertEquals(x.getRecipient(),"recipient");
     }
 
+    /**
+     * Testet, ob der Copy-Konstruktor die Werte wie erwartet kopiert
+     */
     @Test
     void testCopyConstructor() {
         Transfer y = new Transfer(x);
@@ -36,6 +49,9 @@ class TransferTest {
         assertEquals(y.getRecipient(),x.getRecipient());
     }
 
+    /**
+     * Testet, ob die calculate-Methode die korrekten Werte bei ein- bzw. ausgehenden Überweisungen liefert
+     */
     @Test
     void testCalculate() {
         IncomingTransfer incomingX = new IncomingTransfer(x);
@@ -44,39 +60,45 @@ class TransferTest {
         assertEquals(outgoingX.calculate(),-outgoingX.getAmount());
     }
 
+    /**
+     * Testet, ob die equals-Methode kommutativ ist und alle Attribute korrekt vergleicht und verarbeitet
+     */
     @Test
     void testEquals() {
-        assertTrue(x.equals(x));
+        assertEquals(x, x);
 
         Transfer y = new Transfer(x);
-        assertTrue(x.equals(y));
-        assertTrue(y.equals(x));
+        assertEquals(x, y);
+        assertEquals(y, x);
 
         y.setDate("02.01.2022");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Transfer(x);
         y.setAmount(500);
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Transfer(x);
         y.setDescription("other Description");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Transfer(x);
         y.setSender("other sender");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Transfer(x);
         y.setRecipient("other recipient");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
     }
 
+    /**
+     * Testet, ob die toString-Methode den erwarteten Output liefert
+     */
     @Test
     void testToString() {
         String actual = "Datum: "+ x.getDate() + "\nBetrag: " + x.calculate() + " Euro" + "\nBeschreibung: " + x.getDescription()  + "\nSender: " + x.getSender() + "\nEmpfänger: " + x.getRecipient();

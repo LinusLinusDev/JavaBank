@@ -312,7 +312,7 @@ public class PrivateBank implements Bank {
      */
     public void addTransaction(String account, Transaction transaction) throws TransactionAlreadyExistException, AccountDoesNotExistException, IOException {
         if(!accountsToTransactions.containsKey(account))throw new AccountDoesNotExistException();
-        if(accountsToTransactions.get(account).contains(transaction)) throw new TransactionAlreadyExistException();
+        if(this.containsTransaction(account,transaction)) throw new TransactionAlreadyExistException();
         if(transaction instanceof Payment){
             Payment other = new Payment((Payment) transaction);
             other.setIncomingInterest(this.getIncomingInterest());

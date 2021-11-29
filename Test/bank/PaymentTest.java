@@ -3,17 +3,30 @@ package bank;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import static  org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Testklasse, um Methoden der Klasse Payment zu testen.
+ *
+ * @author Linus Palm
+ */
 class PaymentTest {
+    /**
+     * Variable x, wird in allen Tests verwendet, um Funktion der Methoden zu prüfen
+     */
     Payment x = new Payment("01.01.2022",1000.0,"description",0.05,0.1);
 
+    /**
+     * Initialisiere x vor jedem Test neu mit dem ursprünglichen Objekt
+     */
     @BeforeEach
     void init(){
         x = new Payment("01.01.2022",1000.0,"description",0.05,0.1);
     }
 
+    /**
+     * Testet, ob der Konstruktor die Werte wie erwartet zuweist.
+     */
     @Test
     void testConstructor() {
         assertNotNull(x);
@@ -24,6 +37,9 @@ class PaymentTest {
         assertEquals(x.getOutgoingInterest(),0.1);
     }
 
+    /**
+     * Testet, ob der Copy-Konstruktor die Werte wie erwartet kopiert
+     */
     @Test
     void testCopyConstructor() {
         Payment y = new Payment(x);
@@ -35,6 +51,10 @@ class PaymentTest {
         assertEquals(y.getOutgoingInterest(),x.getOutgoingInterest());
     }
 
+    /**
+     * Testet, ob die calculate-Methode positiven bzw. negativen Amount korrekt verarbeitet
+     * @param arg ein-/ausgezahlter Betrag
+     */
     @ParameterizedTest
     @ValueSource(doubles = {-1000.,-500.,0.,500.,1000.})
     void testCalculate(double arg) {
@@ -47,39 +67,45 @@ class PaymentTest {
         }
     }
 
+    /**
+     * Testet, ob die equals-Methode kommutativ ist und alle Attribute korrekt vergleicht und verarbeitet
+     */
     @Test
     void testEquals() {
-        assertTrue(x.equals(x));
+        assertEquals(x, x);
 
         Payment y = new Payment(x);
-        assertTrue(x.equals(y));
-        assertTrue(y.equals(x));
+        assertEquals(x, y);
+        assertEquals(y, x);
 
         y.setDate("02.01.2022");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Payment(x);
         y.setAmount(500);
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Payment(x);
         y.setDescription("other Description");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Payment(x);
         y.setIncomingInterest(0);
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new Payment(x);
         y.setOutgoingInterest(0);
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
     }
 
+    /**
+     * Testet, ob die toString-Methode den erwarteten Output liefert
+     */
     @Test
     void testToString() {
         String actual = "Datum: "+ x.getDate() + "\nBetrag: " + x.calculate() + " Euro" + "\nBeschreibung: " + x.getDescription() + "\nAnfallende Zinsen bei Einzahlung: " + x.getIncomingInterest()*100 + "%" + "\nAnfallende Zinsen bei Auszahlung: " + x.getOutgoingInterest()*100 + "%";

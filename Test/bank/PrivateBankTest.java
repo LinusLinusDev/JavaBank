@@ -3,25 +3,39 @@ package bank;
 import bank.exceptions.AccountAlreadyExistsException;
 import bank.exceptions.AccountDoesNotExistException;
 import bank.exceptions.TransactionAlreadyExistException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import bank.exceptions.TransactionDoesNotExistException;
+import org.junit.jupiter.api.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Testklasse, um Methoden der Klasse PrivateBank zu testen.
+ *
+ * @author Linus Palm
+ */
 import static org.junit.jupiter.api.Assertions.*;
 
 class PrivateBankTest {
+    /**
+     * Variable x, wird in allen Tests verwendet, um Funktion der Methoden zu prüfen
+     */
     PrivateBank x = new PrivateBank("TestBank",0.2,0.3,"Test");
 
+    /**
+     * Initialisiere x vor jedem Test neu mit dem ursprünglichen Objekt
+     */
     @BeforeEach
     void init(){
         x = new PrivateBank("TestBank",0.2,0.3,"Test");
     }
 
+    /**
+     * Lösche neue .json bzw. neues Verzeichnis, falls im letzten Test erstellt. Setze Konto Peter.json zurück.
+     */
     @AfterEach
     void cleanUp() {
         File x = new File("D:\\Linus\\Projekte\\OOS\\savefiles\\Test\\Konto Linus.json");
@@ -40,6 +54,9 @@ class PrivateBankTest {
         }
     }
 
+    /**
+     * Testet, ob der Konstruktor die Werte wie erwartet zuweist und die .json korrekt einließt
+     */
     @Test
     void testConstructor() {
         assertNotNull(x);
@@ -51,6 +68,9 @@ class PrivateBankTest {
         assertEquals(x.getTransactions("Peter").get(0),new Payment("01.01.2022",1000.,"description",0.2,0.3));
     }
 
+    /**
+     * Testet, ob der Copy-Konstruktor die Werte wie erwartet kopiert
+     */
     @Test
     void testCopyConstructor() {
         PrivateBank y = new PrivateBank(x);
@@ -63,93 +83,230 @@ class PrivateBankTest {
         assertEquals(y.getTransactions("Peter").get(0),new Payment("01.01.2022",1000.,"description",y.getIncomingInterest(),y.getOutgoingInterest()));
     }
 
+    /**
+     * Testet, ob das Anlegen eines Kontos, der Hinzufügen von Transaktionen und die Getter-Methode der Map erwartungsgemäß funktionieren.
+     * Testet, ob in den gewünschten Fällen auch wirklich die richtigen Exceptions geworfen werden.
+     */
     @Test
-    void createAccount1() {
+    void createAccountAddTransactionGetTransactions() {
+        try {
+            x.createAccount("Linus");
+            x.addTransaction("Linus",new Payment("01.01.2022",1000.,"description",0,0));
+        } catch (AccountAlreadyExistsException | IOException | TransactionAlreadyExistException | AccountDoesNotExistException e) {
+            e.printStackTrace();
+        }
 
+        List<Transaction> actual = new ArrayList<>();
+        actual.add(new Payment("01.01.2022",1000.,"description",x.getIncomingInterest(),x.getOutgoingInterest()));
+        assertNotNull(x.getTransactions("Linus"));
+        assertEquals(actual,x.getTransactions("Linus"));
+
+        Exception testException1 = assertThrows(AccountAlreadyExistsException.class,() -> x.createAccount("Linus"));
+        assertEquals("Account already exists.",testException1.getMessage());
+
+        Exception testException2 = assertThrows(TransactionAlreadyExistException.class,() -> x.addTransaction("Linus",new Payment("01.01.2022",1000.,"description",0,0)));
+        assertEquals("Transaction already exist.",testException2.getMessage());
+
+        Exception testException3 = assertThrows(AccountDoesNotExistException.class,() -> x.addTransaction("Test",new Payment("01.01.2022",1000.,"description",0,0)));
+        assertEquals("Account does not exist.",testException3.getMessage());
+
+        Exception testException4 = assertThrows(IOException.class,() -> {
+            PrivateBank y = new PrivateBank("Test2",1,1,"Temp");
+            File file = new File("D:\\Linus\\Projekte\\OOS\\savefiles\\Temp");
+            if(file.exists())file.delete();
+            y.createAccount("Temp");
+        });
+        assertEquals("Directory not found.",testException4.getMessage());
     }
 
+    /**
+     * Testet, ob die createAccount-Methode auch in dem Fall korrekt arbeitet, wenn direkt eine Liste mit Transaktionen übergeben wird
+     */
     @Test
-    void createAccount2() {
+    void createAccount() {
+        List<Transaction> actual = new ArrayList<>();
+        actual.add(new Payment("01.01.2022",1000.,"description",x.getIncomingInterest(),x.getOutgoingInterest()));
+        try {
+            x.createAccount("Linus",actual);
+        } catch (AccountAlreadyExistsException | IOException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(x.getTransactions("Linus"));
+        assertEquals(actual,x.getTransactions("Linus"));
     }
 
-    @Test
-    void addTransaction() {
-    }
-
-    @Test
-    void removeTransaction() {
-    }
-
+    /**
+     * Testet, ob die containsTransaction-Methode unabhängig von Klasse und Attributen korrekt arbeitet
+     */
     @Test
     void containsTransaction() {
+        assertTrue(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description",0.2,0.3)));
+        assertFalse(x.containsTransaction("Peter",new IncomingTransfer("01.01.2022",1000.,"description","0.2","0.3")));
+        assertFalse(x.containsTransaction("Peter",new OutgoingTransfer("01.01.2022",1000.,"description","0.2","0.3")));
+        assertFalse(x.containsTransaction("Peter",new Payment("02.01.2022",1000.,"description",0.2,0.3)));
+        assertFalse(x.containsTransaction("Peter",new Payment("01.01.2022",100.,"description",0.2,0.3)));
+        assertFalse(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description!",0.2,0.3)));
+        assertTrue(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description",0.5,0.3)));
+        assertTrue(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description",0.2,0.5)));
     }
 
+    /**
+     * Testet, ob die Transaktionen erwartungsgemäß entfernt werden können und die Exceptions wie gewünscht geworfen werden
+     */
+    @Test
+    void removeTransaction() {
+        List<Transaction> temp = new ArrayList<>();
+        temp.add(new Payment("01.01.2022",1000.,"description",x.getIncomingInterest(),x.getOutgoingInterest()));
+        temp.add(new OutgoingTransfer("24.12.2021",20,"delete this","X","Y"));
+        try {
+            x.createAccount("Linus",temp);
+        } catch (AccountAlreadyExistsException | IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            x.removeTransaction("Linus",new Payment("01.01.2022",1000.,"description",x.getIncomingInterest(),x.getOutgoingInterest()));
+        } catch (TransactionDoesNotExistException | IOException e) {
+            e.printStackTrace();
+        }
+
+        List<Transaction> actual = new ArrayList<>();
+        actual.add(new OutgoingTransfer("24.12.2021",20,"delete this","X","Y"));
+
+        assertEquals(actual,x.getTransactions("Linus"));
+
+        Exception testException = assertThrows(TransactionDoesNotExistException.class,() -> x.removeTransaction("Linus",new OutgoingTransfer("123",123,"Throws exception","X","Y")));
+        assertEquals("Transaction does not exist.",testException.getMessage());
+    }
+
+    /**
+     * Testet, ob die getAccountBalance-Methode, unabhängig von den Klassen der Objekte in der Liste, den Kontostand korrekt errechnet
+     */
     @Test
     void getAccountBalance() {
+        try {
+            x.addTransaction("Peter",new OutgoingTransfer("temp",100,"temp","temp","temp"));
+            x.addTransaction("Peter",new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+            x.addTransaction("Peter",new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+            x.addTransaction("Peter",new IncomingTransfer("temp4",1000,"temp4","temp4","temp4"));
+            x.addTransaction("Peter",new Payment("temp4",-100,"temp4",1,1));
+        } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
+            e.printStackTrace();
+        }
+        assertEquals(x.getAccountBalance("Peter"),1120.);
     }
 
-    @Test
-    void getTransactions() {
-    }
-
+    /**
+     * Testet, ob die getTransactionsSorted-Methode den übergebenen Parameter korrekt interpretiert und die erwartete Liste zurückgibt
+     */
     @Test
     void getTransactionsSorted() {
+        try {
+            x.addTransaction("Peter",new OutgoingTransfer("temp",100,"temp","temp","temp"));
+            x.addTransaction("Peter",new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+            x.addTransaction("Peter",new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+            x.addTransaction("Peter",new IncomingTransfer("temp4",1000,"temp4","temp4","temp4"));
+            x.addTransaction("Peter",new Payment("temp4",-100,"temp4",1,1));
+        } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
+            e.printStackTrace();
+        }
+        List<Transaction> actual = new ArrayList<>();
+        actual.add(new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+        actual.add(new Payment("temp4",-100,"temp4",0.2,0.3));
+        actual.add(new OutgoingTransfer("temp",100,"temp","temp","temp"));
+        actual.add(new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+        actual.add(new Payment("01.01.2022",1000,"description",0.2,0.3));
+        actual.add(new IncomingTransfer("temp4",1000,"temp4","temp4","temp4"));
+
+        assertEquals(actual,x.getTransactionsSorted("Peter",true));
+
+        List<Transaction> actual2 = new ArrayList<>();
+        actual2.add(new IncomingTransfer("temp4",1000,"temp4","temp4","temp4"));
+        actual2.add(new Payment("01.01.2022",1000,"description",0.2,0.3));
+        actual2.add(new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+        actual2.add(new OutgoingTransfer("temp",100,"temp","temp","temp"));
+        actual2.add(new Payment("temp4",-100,"temp4",0.2,0.3));
+        actual2.add(new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+
+        assertEquals(actual2,x.getTransactionsSorted("Peter",false));
     }
 
+    /**
+     * Testet, ob die getTransactionsByType-Methode den übergebenen Parameter korrekt interpretiert und die erwartete Liste zurückgibt
+     */
     @Test
     void getTransactionsByType() {
+        try {
+            x.addTransaction("Peter",new OutgoingTransfer("temp",100,"temp","temp","temp"));
+            x.addTransaction("Peter",new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+            x.addTransaction("Peter",new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+            x.addTransaction("Peter",new IncomingTransfer("temp4",1000,"temp4","temp4","temp4"));
+            x.addTransaction("Peter",new Payment("temp4",-100,"temp4",1,1));
+        } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
+            e.printStackTrace();
+        }
+        List<Transaction> actual = new ArrayList<>();
+        actual.add(new Payment("01.01.2022",1000,"description",0.2,0.3));
+        actual.add(new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+        actual.add(new IncomingTransfer("temp4",1000,"temp4","temp4","temp4"));
+
+        assertEquals(actual,x.getTransactionsByType("Peter",true));
+
+        List<Transaction> actual2 = new ArrayList<>();
+        actual2.add(new OutgoingTransfer("temp",100,"temp","temp","temp"));
+        actual2.add(new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+        actual2.add(new Payment("temp4",-100,"temp4",0.2,0.3));
+
+        assertEquals(actual2,x.getTransactionsByType("Peter",false));
     }
 
+    /**
+     * Testet, ob die equals-Methode kommutativ ist und alle Attribute korrekt vergleicht und verarbeitet
+     */
     @Test
     void testEquals() {
-        assertTrue(x.equals(x));
+        assertEquals(x, x);
 
         PrivateBank y = new PrivateBank(x);
-        assertTrue(x.equals(y));
-        assertTrue(y.equals(x));
+        assertEquals(x, y);
+        assertEquals(y, x);
 
         y = new PrivateBank(x);
         y.setName("other Name");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new PrivateBank(x);
         y.setIncomingInterest(0);
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new PrivateBank(x);
         y.setOutgoingInterest(0);
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new PrivateBank(x);
         y.setDirectoryName("otherDirectory");
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new PrivateBank(x);
         try {
             y.addTransaction("Peter",new IncomingTransfer("24.04.1998",100,"Test","Test","Test"));
-        } catch (TransactionAlreadyExistException e) {
-            e.printStackTrace();
-        } catch (AccountDoesNotExistException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
             e.printStackTrace();
         }
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
 
         y = new PrivateBank(x);
         try {
             y.createAccount("Linus");
-        } catch (AccountAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (AccountAlreadyExistsException | IOException e) {
             e.printStackTrace();
         }
-        assertFalse(x.equals(y));
-        assertFalse(y.equals(x));
+        assertNotEquals(x, y);
+        assertNotEquals(y, x);
     }
 }
