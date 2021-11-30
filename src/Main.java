@@ -30,7 +30,7 @@ public class Main {
 
         GsonBuilder deserializer = new GsonBuilder();
 
-        deserializer.registerTypeAdapter(Transaction.class, new customDeserializer());
+        deserializer.registerTypeAdapter(Transaction.class, new customSerializer());
 
         Gson customDeserializer = deserializer.create();
         Transaction customObject = customDeserializer.fromJson(customJsonX, Transaction.class);

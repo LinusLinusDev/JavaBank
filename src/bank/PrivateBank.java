@@ -214,7 +214,7 @@ public class PrivateBank implements Bank {
                     boolean override = false;
 
                     GsonBuilder deserializer = new GsonBuilder();
-                    deserializer.registerTypeAdapter(Transaction.class, new customDeserializer());
+                    deserializer.registerTypeAdapter(Transaction.class, new customSerializer());
                     Gson customDeserializer = deserializer.create();
 
                     ArrayList<Transaction> transactions = customDeserializer.fromJson(input, new TypeToken<ArrayList<Transaction>>() {}.getType());
