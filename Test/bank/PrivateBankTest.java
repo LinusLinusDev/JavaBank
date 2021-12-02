@@ -38,13 +38,13 @@ class PrivateBankTest {
      */
     @AfterEach
     void cleanUp() {
-        File x = new File("D:\\Linus\\Projekte\\OOS\\savefiles\\Test\\Konto Linus.json");
+        File x = new File(new File("").getAbsolutePath()+ File.separator +"savefiles" + File.separator + "Test" + File.separator + "Konto Linus.json");
         if(x.exists())x.delete();
 
-        x = new File("D:\\Linus\\Projekte\\OOS\\savefiles\\otherDirectory");
+        x = new File(new File("").getAbsolutePath()+ File.separator + "savefiles" + File.separator + "otherDirectory");
         if(x.exists())x.delete();
 
-        x = new File("D:\\Linus\\Projekte\\OOS\\savefiles\\Test\\Konto Peter.json");
+        x = new File(new File("").getAbsolutePath()+ File.separator + "savefiles" + File.separator + "Test" + File.separator + "Konto Peter.json");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(x));
             writer.write("[{\"CLASSNAME\":\"Payment\",\"INSTANCE\":{\"incomingInterest\":0.2,\"outgoingInterest\":0.3,\"date\":\"01.01.2022\",\"amount\":1000.0,\"description\":\"description\"}}]");
@@ -64,7 +64,7 @@ class PrivateBankTest {
         assertEquals(x.getIncomingInterest(),0.2);
         assertEquals(x.getOutgoingInterest(),0.3);
         assertEquals(x.getDirectoryName(),"Test");
-        assertEquals(x.getDirectory(),"D:\\Linus\\Projekte\\OOS\\savefiles\\Test");
+        assertEquals(x.getDirectory(),new File("").getAbsolutePath() + File.separator +"savefiles" + File.separator + "Test");
         assertEquals(x.getTransactions("Peter").get(0),new Payment("01.01.2022",1000.,"description",0.2,0.3));
     }
 
@@ -110,7 +110,7 @@ class PrivateBankTest {
 
         Exception testException4 = assertThrows(IOException.class,() -> {
             PrivateBank y = new PrivateBank("Test2",1,1,"Temp");
-            File file = new File("D:\\Linus\\Projekte\\OOS\\savefiles\\Temp");
+            File file = new File(new File("").getAbsolutePath()+ File.separator + "savefiles" + File.separator + "Temp");
             if(file.exists())file.delete();
             y.createAccount("Temp");
         });

@@ -112,7 +112,7 @@ public class PrivateBank implements Bank {
      *
      */
     public String getDirectory(){
-        return new File("").getAbsolutePath() + "\\savefiles\\" + directoryName;
+        return new File("").getAbsolutePath() + File.separator + "savefiles" + File.separator + directoryName;
     }
 
     /**
@@ -245,7 +245,7 @@ public class PrivateBank implements Bank {
         if(getDirectoryName()=="")return;
         File file = new File(getDirectory());
         if(!file.exists()) throw new IOException("Directory not found.");
-        file = new File(getDirectory()+"\\Konto "+account+".json");
+        file = new File(getDirectory()+File.separator+"Konto "+account+".json");
 
         if(!file.exists())file.createNewFile();
         if(accountsToTransactions.get(account).isEmpty())return;
