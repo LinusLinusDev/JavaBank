@@ -126,7 +126,7 @@ class PrivateBankTest {
     void createAccount() {
         List<Transaction> actual = new ArrayList<>();
         actual.add(new Payment("01.01.2022",1000.,"description",x.getIncomingInterest(),x.getOutgoingInterest()));
-        try {//assertdoesnoththrow
+        try {
             x.createAccount("Linus",actual);
         } catch (AccountAlreadyExistsException | IOException e) {
             e.printStackTrace();
@@ -139,8 +139,7 @@ class PrivateBankTest {
      * Testet, ob die containsTransaction-Methode unabhängig von Klasse und Attributen korrekt arbeitet
      */
     @Test
-    void containsTransaction() {//Test failed
-        //assertFalse(x.containsTransaction("hallo",new Payment("01.01.2022",1000.,"description",0.2,0.3)));
+    void containsTransaction() {
         assertTrue(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description",0.2,0.3)));
         assertFalse(x.containsTransaction("Peter",new IncomingTransfer("01.01.2022",1000.,"description","0.2","0.3")));
         assertFalse(x.containsTransaction("Peter",new OutgoingTransfer("01.01.2022",1000.,"description","0.2","0.3")));
@@ -149,7 +148,7 @@ class PrivateBankTest {
         assertFalse(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description!",0.2,0.3)));
         assertTrue(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description",0.5,0.3)));
         assertTrue(x.containsTransaction("Peter",new Payment("01.01.2022",1000.,"description",0.2,0.5)));
-    } //null übergeben?
+    }
 
     /**
      * Testet, ob die Transaktionen erwartungsgemäß entfernt werden können und die Exceptions wie gewünscht geworfen werden
