@@ -19,23 +19,11 @@ public class customSerializer implements JsonSerializer<Transaction>, JsonDeseri
      * @return Serialisiertes JsonElement als String
      */
     public JsonElement serialize(Transaction transaction, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonObject values = new JsonObject();
         JsonObject capsule = new JsonObject();
-
-        if(transaction instanceof Payment){
-            values.addProperty("incomingInterest",((Payment) transaction).getIncomingInterest());
-            values.addProperty("outgoingInterest",((Payment) transaction).getOutgoingInterest());
-        }
-        else if(transaction instanceof Transfer) {
-            values.addProperty("sender",((Transfer) transaction).getSender());
-            values.addProperty("recipient",((Transfer) transaction).getRecipient());
-        }
-        values.addProperty("date",transaction.getDate());
-        values.addProperty("amount",transaction.getAmount());
-        values.addProperty("description",transaction.getDescription());
+        Gson gson = new Gson();
 
         capsule.addProperty("CLASSNAME",transaction.getClass().getSimpleName());
-        capsule.add("INSTANCE",values);
+        capsule.add("INSTANCE",gson.toJsonTree(transaction));
         return capsule;
     }
 

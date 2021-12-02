@@ -251,19 +251,10 @@ public class PrivateBank implements Bank {
         if(accountsToTransactions.get(account).isEmpty())return;
 
         GsonBuilder serializer = new GsonBuilder();
-        serializer.registerTypeAdapter(Payment.class,new customSerializer());
-        serializer.registerTypeAdapter(IncomingTransfer.class,new customSerializer());
-        serializer.registerTypeAdapter(OutgoingTransfer.class,new customSerializer());
+        serializer.registerTypeHierarchyAdapter(Transaction.class,new customSerializer());
         Gson customSerializer = serializer.create();
 
-        String output="[";
-
-        for(int i=0;i<accountsToTransactions.get(account).size();i++){
-            output += customSerializer.toJson(accountsToTransactions.get(account).get(i));
-            if(i<accountsToTransactions.get(account).size()-1)output += ",";
-        }
-
-        output += "]";
+        String output = customSerializer.toJson(accountsToTransactions.get(account));
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write(output);
@@ -352,7 +343,11 @@ public class PrivateBank implements Bank {
             ((Payment) transaction).setIncomingInterest(this.getIncomingInterest());
             ((Payment) transaction).setOutgoingInterest(this.getOutgoingInterest());
         }
-        return accountsToTransactions.get(account).contains(transaction);
+        try {
+            return accountsToTransactions.get(account).contains(transaction);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     /**
