@@ -148,6 +148,7 @@ public class PrivateBank implements Bank {
      * @param directoryName Speicherort der Konten
      */
     public void setDirectoryName(String directoryName) {
+        accountsToTransactions.clear();
         if(directoryName!="") {
             this.directoryName = directoryName;
             File dir = new File(getDirectory());
@@ -197,7 +198,6 @@ public class PrivateBank implements Bank {
      * @throws IOException wird geworfen, wenn kein entsprechendes Verzeichnis existiert.
      */
     private void readAccounts() throws IOException {
-        accountsToTransactions.clear();
         File dir = new File(getDirectory());
         if (!dir.exists()) throw new IOException("Directory not found.");
         File[] fileArray = dir.listFiles();
@@ -248,13 +248,13 @@ public class PrivateBank implements Bank {
         file = new File(getDirectory()+File.separator+"Konto "+account+".json");
 
         if(!file.exists())file.createNewFile();
-        if(accountsToTransactions.get(account).isEmpty())return;
+        if(getTransactions(account).isEmpty())return;
 
         GsonBuilder serializer = new GsonBuilder();
         serializer.registerTypeHierarchyAdapter(Transaction.class,new customSerializer());
         Gson customSerializer = serializer.create();
 
-        String output = customSerializer.toJson(accountsToTransactions.get(account));
+        String output = customSerializer.toJson(getTransactions(account));
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write(output);
