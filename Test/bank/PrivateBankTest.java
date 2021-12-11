@@ -41,6 +41,12 @@ class PrivateBankTest {
         File x = new File(new File("").getAbsolutePath()+ File.separator +"savefiles" + File.separator + "Test" + File.separator + "Konto Linus.json");
         if(x.exists())x.delete();
 
+        x = new File(new File("").getAbsolutePath()+ File.separator +"savefiles" + File.separator + "Test" + File.separator + "Konto Zeineb.json");
+        if(x.exists())x.delete();
+
+        x = new File(new File("").getAbsolutePath()+ File.separator +"savefiles" + File.separator + "Test" + File.separator + "Konto Daniel.json");
+        if(x.exists())x.delete();
+
         x = new File(new File("").getAbsolutePath()+ File.separator + "savefiles" + File.separator + "otherDirectory");
         if(x.exists())x.delete();
 
@@ -237,6 +243,44 @@ class PrivateBankTest {
         actual2.add(new Payment("temp4",-100,"temp4",0.2,0.3));
 
         assertEquals(actual2,x.getTransactionsByType("Peter",false));
+    }
+
+    /**
+     * Testet, ob die deleteAccount-Methode erwartungsgemäß arbeitet
+     */
+    @Test
+    void deleteAccount() {
+        assertDoesNotThrow(() -> {
+            x.createAccount("Linus");
+            x.addTransaction("Linus",new OutgoingTransfer("temp",100,"temp","temp","temp"));
+            x.addTransaction("Linus",new OutgoingTransfer("temp2",500,"temp2","temp2","temp2"));
+            x.addTransaction("Linus",new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
+            x.deleteAccount("Linus");
+        });
+        File file = new File(x.getDirectory() + File.separator + "Konto " + "Linus" + ".json");
+        assertFalse(file.exists());
+
+        Exception testException = assertThrows(AccountDoesNotExistException.class,() -> x.deleteAccount("Linus"));
+        assertEquals("Account does not exist.",testException.getMessage());
+    }
+
+    /**
+     * Testet ob die getAllAccounts-Methode das richtige Objekt zurückgibt
+     */
+    @Test
+    void getAllAccounts() {
+        assertDoesNotThrow(() -> {
+            x.createAccount("Linus");
+            x.createAccount("Zeineb");
+            x.createAccount("Daniel");
+        });
+        ArrayList <String> list = (ArrayList<String>) x.getAllAccounts();
+        ArrayList <String> actual = new ArrayList<String>();
+        actual.add("Zeineb");
+        actual.add("Peter");
+        actual.add("Daniel");
+        actual.add("Linus");
+        assertEquals(actual,list);
     }
 
     /**

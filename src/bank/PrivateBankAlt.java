@@ -1,6 +1,8 @@
 package bank;
 
 import bank.exceptions.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -296,4 +298,22 @@ public class PrivateBankAlt implements Bank {
         return list;
     }
     // Account does not exists - Exception?
+
+    /**
+     * Löscht ein Konto der Bank. Sollte das angegebene Konto nicht existieren, wird eine Exception geworfen
+     *
+     * @param account ausgewähltes Konto
+     */
+    public void deleteAccount(String account) throws AccountDoesNotExistException, IOException {
+
+    }
+
+    /**
+     * Gibt eine Liste aller Accounts der Bank zurück
+     *
+     * @return Liste der Accounts
+     */
+    public List<String> getAllAccounts() {
+        return null;
+    }
 }

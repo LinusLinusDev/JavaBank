@@ -8,10 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Klasse, die eine Bank abstrahiert. Verwaltet und verarbeitet Konten und Transaktionen. Implementiert {@link Bank}.
@@ -245,20 +242,22 @@ public class PrivateBank implements Bank {
         if(getDirectoryName()=="")return;
         File file = new File(getDirectory());
         if(!file.exists()) throw new IOException("Directory not found.");
-        file = new File(getDirectory()+File.separator+"Konto "+account+".json");
+        file = new File(getDirectory() + File.separator + "Konto " + account + ".json");
+        if(accountsToTransactions.containsKey(account)) {
+            if (!file.exists()) file.createNewFile();
+            if (getTransactions(account).isEmpty()) return;
 
-        if(!file.exists())file.createNewFile();
-        if(getTransactions(account).isEmpty())return;
+            GsonBuilder serializer = new GsonBuilder();
+            serializer.registerTypeHierarchyAdapter(Transaction.class, new customSerializer());
+            Gson customSerializer = serializer.create();
 
-        GsonBuilder serializer = new GsonBuilder();
-        serializer.registerTypeHierarchyAdapter(Transaction.class,new customSerializer());
-        Gson customSerializer = serializer.create();
+            String output = customSerializer.toJson(getTransactions(account));
 
-        String output = customSerializer.toJson(getTransactions(account));
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.write(output);
-        writer.close();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(output);
+            writer.close();
+        }
+        else file.delete();
     }
 
     /**
@@ -413,5 +412,26 @@ public class PrivateBank implements Bank {
             }
         }
         return list;
+    }
+
+    /**
+     * Löscht ein Konto der Bank. Sollte das angegebene Konto nicht existieren, wird eine Exception geworfen
+     *
+     * @param account ausgewähltes Konto
+     */
+    public void deleteAccount(String account) throws AccountDoesNotExistException, IOException {
+        if(!accountsToTransactions.containsKey(account)) throw new AccountDoesNotExistException();
+        accountsToTransactions.remove(account);
+
+        writeAccount(account);
+    }
+
+    /**
+     * Gibt eine Liste aller Accounts der Bank zurück
+     *
+     * @return Liste der Accounts
+     */
+    public List<String> getAllAccounts() {
+        return new ArrayList<String>(accountsToTransactions.keySet());
     }
 }

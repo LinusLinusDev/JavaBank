@@ -96,4 +96,18 @@ public interface Bank {
      * @return the list of transactions
      */
     List<Transaction> getTransactionsByType(String account, boolean positive);
+
+    /**
+     * Deletes an account from the bank. If the account does not exist, an exception is thrown.
+     *
+     * @param account the selected account
+     */
+    void deleteAccount(String account) throws AccountDoesNotExistException, IOException;
+
+    /**
+     * Returns a list of all existing accounts of the bank.
+     *
+     * @return the list of accounts
+     */
+    List<String> getAllAccounts();
 }
