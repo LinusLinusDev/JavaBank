@@ -1,10 +1,12 @@
+package old;
+
 import bank.*;
 import bank.exceptions.AccountAlreadyExistsException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.List;
 
-public class Main {
+public class Test_P4 {
     public static void main(String[] args){
 
     }

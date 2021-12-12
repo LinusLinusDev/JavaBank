@@ -257,7 +257,7 @@ class PrivateBankTest {
             x.addTransaction("Linus",new IncomingTransfer("temp3",50,"temp3","temp3","temp3"));
             x.deleteAccount("Linus");
         });
-        File file = new File(x.getDirectory() + File.separator + "Konto " + "Linus" + ".json");
+        File file = new File(x.getDirectory() + File.separator + "Konto Linus.json");
         assertFalse(file.exists());
 
         Exception testException = assertThrows(AccountDoesNotExistException.class,() -> x.deleteAccount("Linus"));

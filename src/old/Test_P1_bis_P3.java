@@ -1,3 +1,5 @@
+package old;
+
 import bank.*;
 import bank.exceptions.*;
 
@@ -6,7 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- *  Klasse Test_P1_bis_P3, welche eine main-Methode liefert, in der die Funktionalität der Implementierungen der ersten drei Praktika getestet werden kann.
+ *  Klasse old.Test_P1_bis_P3, welche eine main-Methode liefert, in der die Funktionalität der Implementierungen der ersten drei Praktika getestet werden kann.
  *
  * @author Linus Palm
  */
