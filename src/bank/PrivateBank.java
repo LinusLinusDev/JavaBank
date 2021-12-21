@@ -6,8 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -146,7 +144,7 @@ public class PrivateBank implements Bank {
      */
     public void setDirectoryName(String directoryName) {
         accountsToTransactions.clear();
-        if(directoryName!="") {
+        if(!directoryName.equals("")) {
             this.directoryName = directoryName;
             File dir = new File(getDirectory());
             if (dir.exists()) {
@@ -200,7 +198,12 @@ public class PrivateBank implements Bank {
         File[] fileArray = dir.listFiles();
         for(File file:fileArray){
             if (file.getName().startsWith("Konto ") && file.getName().endsWith(".json")){
-                String input = Files.readString(Paths.get(file.getPath()));
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String input = "";
+                String line;
+                while((line = reader.readLine())!= null){
+                    input += line;
+                }
                 String name = file.getName().substring(6,file.getName().lastIndexOf('.'));
 
                 if(input==""){

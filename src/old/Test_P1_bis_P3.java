@@ -18,7 +18,6 @@ public class Test_P1_bis_P3 {
      * main-Methode fungiert als Einstiegspunkt für die folgenden Tests
      */
     public static void main(String[] args){
-
         /**
          * Testen aller Konstruktoren der Klasse Payment
          */
