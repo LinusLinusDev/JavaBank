@@ -6,16 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Praktikum" />
+        <module name="JavaBank" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Praktikum" target="14" />
+      <module name="JavaBank" target="14" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Praktikum" options="--release 14" />
+      <module name="JavaBank" options="--release 14" />
     </option>
   </component>
 </project>
