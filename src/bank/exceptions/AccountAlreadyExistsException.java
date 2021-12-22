@@ -1,7 +1,10 @@
 package bank.exceptions;
 
+/**
+ * Exception die von der Klasse {@link bank.PrivateBank} geworfen werden kann.
+ */
 public class AccountAlreadyExistsException extends Exception {
     public AccountAlreadyExistsException () {
-        super("Account already exists.");
+        super("Konto existiert bereits.");
     }
 }

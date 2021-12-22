@@ -29,7 +29,7 @@ public class AccountviewController extends Controller{
     /**
      * Name das aktuell ausgewählten Kontos
      */
-    String account = main.getInstance().getSelectedAccount();
+    String account = Main.getInstance().getSelectedAccount();
 
     /**
      * Liste der Transaktionen des aktuell ausgewählten Kontos
@@ -99,7 +99,7 @@ public class AccountviewController extends Controller{
         accountName.setText(account);
 
         accountBalance.setEditable(false);
-        accountBalance.setText(String.valueOf(main.getInstance().getBank().getAccountBalance(account)));
+        accountBalance.setText(String.valueOf(Main.getInstance().getBank().getAccountBalance(account)));
 
         ObservableList<String> items = FXCollections.observableArrayList(getTransactionsString(account,0));
         transaktionen.setItems(items);
@@ -109,7 +109,7 @@ public class AccountviewController extends Controller{
      * Aktualisiert die Anzeigewerte des Kontostandes und der Transaktionen, wird nach dem Löschen eines Eintrags aufgerufen.
      */
     protected void aktualisiere() {
-        accountBalance.setText(String.valueOf(main.getInstance().getBank().getAccountBalance(account)));
+        accountBalance.setText(String.valueOf(Main.getInstance().getBank().getAccountBalance(account)));
 
         List<String> result = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class AccountviewController extends Controller{
      * Aktualisiert die Anzeigewerte des Kontostandes und der Transaktionen, wird nach dem Erstellen eines Eintrags aufgerufen.
      */
     private void aktualisiereNeuerEintrag() {
-        accountBalance.setText(String.valueOf(main.getInstance().getBank().getAccountBalance(account)));
+        accountBalance.setText(String.valueOf(Main.getInstance().getBank().getAccountBalance(account)));
         ObservableList<String> items = FXCollections.observableArrayList(getTransactionsString(account,0));
         transaktionen.setItems(items);
     }
@@ -139,11 +139,11 @@ public class AccountviewController extends Controller{
      */
     public List<String> getTransactionsString(String account, int mode){
         switch (mode) {
-            case 0 -> list = main.getInstance().getBank().getTransactions(account);
-            case 1 -> list = main.getInstance().getBank().getTransactionsSorted(account, true);
-            case 2 -> list = main.getInstance().getBank().getTransactionsSorted(account, false);
-            case 3 -> list = main.getInstance().getBank().getTransactionsByType(account, true);
-            case 4 -> list = main.getInstance().getBank().getTransactionsByType(account, false);
+            case 0 -> list = Main.getInstance().getBank().getTransactions(account);
+            case 1 -> list = Main.getInstance().getBank().getTransactionsSorted(account, true);
+            case 2 -> list = Main.getInstance().getBank().getTransactionsSorted(account, false);
+            case 3 -> list = Main.getInstance().getBank().getTransactionsByType(account, true);
+            case 4 -> list = Main.getInstance().getBank().getTransactionsByType(account, false);
         }
 
         List<String> result = new ArrayList<>();
@@ -197,7 +197,7 @@ public class AccountviewController extends Controller{
     @FXML
     public void zurueck() {
         try {
-            main.getInstance().loadMainview();
+            Main.getInstance().loadMainview();
         } catch (IOException e) {
             fehlermeldung("Die Startseite konnte nicht aufgerufen werden.",e.getMessage());
         }
@@ -216,7 +216,7 @@ public class AccountviewController extends Controller{
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK){
             try {
-                main.getInstance().getBank().removeTransaction(account,list.get(transaktionen.getSelectionModel().getSelectedIndex()));
+                Main.getInstance().getBank().removeTransaction(account,list.get(transaktionen.getSelectionModel().getSelectedIndex()));
                 aktualisiere();
             } catch (IOException | TransactionDoesNotExistException e) {
                 fehlermeldung("Transaktion konnte nicht gelöscht werden.", e.getMessage());
@@ -315,7 +315,7 @@ public class AccountviewController extends Controller{
             }
             else if(sender.getText().equals(account)){
                 try {
-                    main.getInstance().getBank().addTransaction(account,new OutgoingTransfer(date.getText(),amountValue,descr.getText(),account,recipient.getText()));
+                    Main.getInstance().getBank().addTransaction(account,new OutgoingTransfer(date.getText(),amountValue,descr.getText(),account,recipient.getText()));
                     aktualisiereNeuerEintrag();
                 } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
                     fehlermeldung("Überweisung konnte nicht erstellt werden.",e.getMessage());
@@ -323,7 +323,7 @@ public class AccountviewController extends Controller{
             }
             else if(recipient.getText().equals(account)){
                 try {
-                    main.getInstance().getBank().addTransaction(account,new IncomingTransfer(date.getText(),amountValue,descr.getText(),sender.getText(),account));
+                    Main.getInstance().getBank().addTransaction(account,new IncomingTransfer(date.getText(),amountValue,descr.getText(),sender.getText(),account));
                     aktualisiereNeuerEintrag();
                 } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
                     fehlermeldung("Überweisung konnte nicht erstellt werden.",e.getMessage());
@@ -386,7 +386,7 @@ public class AccountviewController extends Controller{
 
             if(result.get().getText().equals("Einzahlen")) {
                 try {
-                    main.getInstance().getBank().addTransaction(account, new Payment(date.getText(), amountValue, descr.getText()));
+                    Main.getInstance().getBank().addTransaction(account, new Payment(date.getText(), amountValue, descr.getText()));
                     aktualisiereNeuerEintrag();
                 } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
                     fehlermeldung("Ein-/Auszahlung konnte nicht erstellt werden.", e.getMessage());
@@ -394,7 +394,7 @@ public class AccountviewController extends Controller{
             }
             else {
                 try {
-                    main.getInstance().getBank().addTransaction(account, new Payment(date.getText(), -amountValue, descr.getText()));
+                    Main.getInstance().getBank().addTransaction(account, new Payment(date.getText(), -amountValue, descr.getText()));
                     aktualisiereNeuerEintrag();
                 } catch (TransactionAlreadyExistException | AccountDoesNotExistException | IOException e) {
                     fehlermeldung("Ein-/Auszahlung konnte nicht erstellt werden.", e.getMessage());

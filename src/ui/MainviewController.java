@@ -34,7 +34,7 @@ public class MainviewController extends Controller {
      */
     @FXML
     public void initialize() {
-        ObservableList<String> items = FXCollections.observableArrayList(main.getInstance().getBank().getAllAccounts());
+        ObservableList<String> items = FXCollections.observableArrayList(Main.getInstance().getBank().getAllAccounts());
         konten.setItems(items);
     }
 
@@ -51,7 +51,7 @@ public class MainviewController extends Controller {
         if (result.isPresent()) {
             if (!result.get().equals("")) {
                 try {
-                    main.getInstance().getBank().createAccount(result.get());
+                    Main.getInstance().getBank().createAccount(result.get());
                     aktualisiere();
                 } catch (AccountAlreadyExistsException | IOException e) {
                     fehlermeldung("Konto konnte nicht erstellt werden.", e.getMessage());
@@ -68,7 +68,7 @@ public class MainviewController extends Controller {
     @FXML
     public void auswaehlen() {
         try {
-            main.getInstance().loadAccountview(konten.getSelectionModel().getSelectedItems().get(0));
+            Main.getInstance().loadAccountview(konten.getSelectionModel().getSelectedItems().get(0));
         } catch (IOException e) {
             fehlermeldung("Das Konto " + konten.getSelectionModel().getSelectedItems().get(0) + " konnte nicht aufgerufen werden.",e.getMessage());
         }
@@ -87,7 +87,7 @@ public class MainviewController extends Controller {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK){
             try {
-                main.getInstance().getBank().deleteAccount(konten.getSelectionModel().getSelectedItems().get(0));
+                Main.getInstance().getBank().deleteAccount(konten.getSelectionModel().getSelectedItems().get(0));
                 aktualisiere();
             } catch (AccountDoesNotExistException | IOException e) {
                 fehlermeldung("Konto konnte nicht gelöscht werden.", e.getMessage());

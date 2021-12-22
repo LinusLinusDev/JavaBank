@@ -34,7 +34,7 @@ public class PrivateBank implements Bank {
     /**
      * Verknüpfung von Konten mit Transaktionen
      */
-    private Map<String, List<Transaction>> accountsToTransactions = new HashMap<>();
+    private final Map<String, List<Transaction>> accountsToTransactions = new HashMap<>();
 
     /**
      * Speicherort der Konten
@@ -206,8 +206,8 @@ public class PrivateBank implements Bank {
                 }
                 String name = file.getName().substring(6,file.getName().lastIndexOf('.'));
 
-                if(input==""){
-                    accountsToTransactions.put(name,new ArrayList<Transaction>());
+                if(input.equals("")){
+                    accountsToTransactions.put(name, new ArrayList<>());
                 }
 
                 else {
@@ -242,7 +242,7 @@ public class PrivateBank implements Bank {
      * @throws IOException wird geworfen, wenn kein entsprechendes Verzeichnis existiert.
      */
     private void writeAccount(String account) throws IOException {
-        if(getDirectoryName()=="")return;
+        if(getDirectoryName().equals(""))return;
         File file = new File(getDirectory());
         if(!file.exists()) throw new IOException("Directory not found.");
         file = new File(getDirectory() + File.separator + "Konto " + account + ".json");
@@ -435,6 +435,6 @@ public class PrivateBank implements Bank {
      * @return Liste der Accounts
      */
     public List<String> getAllAccounts() {
-        return new ArrayList<String>(accountsToTransactions.keySet());
+        return new ArrayList<>(accountsToTransactions.keySet());
     }
 }

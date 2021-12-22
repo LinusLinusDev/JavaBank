@@ -11,14 +11,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testklasse, um Methoden der Klasse PrivateBank zu testen.
  *
  * @author Linus Palm
  */
-import static org.junit.jupiter.api.Assertions.*;
-
 class PrivateBankTest {
     /**
      * Variable x, wird in allen Tests verwendet, um Funktion der Methoden zu prüfen
@@ -106,13 +105,13 @@ class PrivateBankTest {
         assertEquals(actual,x.getTransactions("Linus"));
 
         Exception testException1 = assertThrows(AccountAlreadyExistsException.class,() -> x.createAccount("Linus"));
-        assertEquals("Account already exists.",testException1.getMessage());
+        assertEquals("Konto existiert bereits.",testException1.getMessage());
 
         Exception testException2 = assertThrows(TransactionAlreadyExistException.class,() -> x.addTransaction("Linus",new Payment("01.01.2022",1000.,"description",0,0)));
-        assertEquals("Transaction already exist.",testException2.getMessage());
+        assertEquals("Transaktion existiert bereits.",testException2.getMessage());
 
         Exception testException3 = assertThrows(AccountDoesNotExistException.class,() -> x.addTransaction("Test",new Payment("01.01.2022",1000.,"description",0,0)));
-        assertEquals("Account does not exist.",testException3.getMessage());
+        assertEquals("Konto existiert nicht.",testException3.getMessage());
 
         Exception testException4 = assertThrows(IOException.class,() -> {
             PrivateBank y = new PrivateBank("Test2",1,1,"Temp");
@@ -167,7 +166,7 @@ class PrivateBankTest {
         assertEquals(actual,x.getTransactions("Linus"));
 
         Exception testException = assertThrows(TransactionDoesNotExistException.class,() -> x.removeTransaction("Linus",new OutgoingTransfer("123",123,"Throws exception","X","Y")));
-        assertEquals("Transaction does not exist.",testException.getMessage());
+        assertEquals("Transaktion existiert nicht.",testException.getMessage());
     }
 
     /**
@@ -261,7 +260,7 @@ class PrivateBankTest {
         assertFalse(file.exists());
 
         Exception testException = assertThrows(AccountDoesNotExistException.class,() -> x.deleteAccount("Linus"));
-        assertEquals("Account does not exist.",testException.getMessage());
+        assertEquals("Konto existiert nicht.",testException.getMessage());
     }
 
     /**
@@ -275,7 +274,7 @@ class PrivateBankTest {
             x.createAccount("Daniel");
         });
         ArrayList <String> list = (ArrayList<String>) x.getAllAccounts();
-        ArrayList <String> actual = new ArrayList<String>();
+        ArrayList <String> actual = new ArrayList<>();
         actual.add("Zeineb");
         actual.add("Peter");
         actual.add("Daniel");

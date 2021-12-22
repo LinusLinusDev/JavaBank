@@ -37,7 +37,7 @@ public class Test_P1_bis_P3 {
         /**
          * Testen aller Konstruktoren der Klasse Transfer
          */
-        IncomingTransfer e = new IncomingTransfer("13.10.2021",2.5,"TestTest");
+        IncomingTransfer e = new IncomingTransfer("13.10.2021",2.5,"TestTest","x","y");
         OutgoingTransfer f = new OutgoingTransfer("24.04.2021", 50.0,"Geburtstagsgeschenk von Opa","Opa","Linus");
         OutgoingTransfer g = new OutgoingTransfer(f);
         Transfer eX = new Transfer("13.10.2021",2.5,"TestTest");

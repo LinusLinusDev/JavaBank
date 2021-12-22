@@ -14,17 +14,6 @@ public class IncomingTransfer extends Transfer {
      * @param date Datum der Transaktion im Format DD.MM.YYYY
      * @param amount Geldmenge die bei der Transaktion verbucht wird
      * @param description Zusätzliche Beschreibung des Vorgangs
-     */
-    public IncomingTransfer(String date, double amount, String description) {
-        super(date,amount,description);
-    }
-
-    /**
-     * Konstruktor, initialisiert alle Attribute mit den übergebenen Parametern
-     *
-     * @param date Datum der Transaktion im Format DD.MM.YYYY
-     * @param amount Geldmenge die bei der Transaktion verbucht wird
-     * @param description Zusätzliche Beschreibung des Vorgangs
      * @param sender Sender des Geldes
      * @param recipient Empfänger des Geldes
      */

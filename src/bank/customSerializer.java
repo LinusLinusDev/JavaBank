@@ -43,9 +43,10 @@ public class customSerializer implements JsonSerializer<Transaction>, JsonDeseri
         JsonObject values = capsule.get("INSTANCE").getAsJsonObject();
         if(!(values.has("date") && values.has("amount") && values.has("description")))throw new JsonParseException("Invalid Input. date/amount/description missing.");
 
-        switch (capsule.get("CLASSNAME").getAsString()){
-            case "Payment":
-                if(!(values.has("incomingInterest") && values.has("outgoingInterest")))throw new JsonParseException("Invalid Input. incomingInterest/outgoingInterest missing.");
+        switch (capsule.get("CLASSNAME").getAsString()) {
+            case "Payment" -> {
+                if (!(values.has("incomingInterest") && values.has("outgoingInterest")))
+                    throw new JsonParseException("Invalid Input. incomingInterest/outgoingInterest missing.");
                 return new Payment(
                         values.get("date").getAsString(),
                         values.get("amount").getAsDouble(),
@@ -53,8 +54,10 @@ public class customSerializer implements JsonSerializer<Transaction>, JsonDeseri
                         values.get("incomingInterest").getAsDouble(),
                         values.get("outgoingInterest").getAsDouble()
                 );
-            case "IncomingTransfer":
-                if(!(values.has("sender") && values.has("recipient")))throw new JsonParseException("Invalid Input. sender/recipient missing.");
+            }
+            case "IncomingTransfer" -> {
+                if (!(values.has("sender") && values.has("recipient")))
+                    throw new JsonParseException("Invalid Input. sender/recipient missing.");
                 return new IncomingTransfer(
                         values.get("date").getAsString(),
                         values.get("amount").getAsDouble(),
@@ -62,8 +65,10 @@ public class customSerializer implements JsonSerializer<Transaction>, JsonDeseri
                         values.get("sender").getAsString(),
                         values.get("recipient").getAsString()
                 );
-            case "OutgoingTransfer":
-                if(!(values.has("sender") && values.has("recipient")))throw new JsonParseException("Invalid Input. sender/recipient missing.");
+            }
+            case "OutgoingTransfer" -> {
+                if (!(values.has("sender") && values.has("recipient")))
+                    throw new JsonParseException("Invalid Input. sender/recipient missing.");
                 return new OutgoingTransfer(
                         values.get("date").getAsString(),
                         values.get("amount").getAsDouble(),
@@ -71,6 +76,7 @@ public class customSerializer implements JsonSerializer<Transaction>, JsonDeseri
                         values.get("sender").getAsString(),
                         values.get("recipient").getAsString()
                 );
+            }
         }
         return null;
     }

@@ -11,12 +11,12 @@ import java.io.IOException;
 /**
  * Klasse die den Einstiegspunkt des Programms und die "globalen" Variablen liefert.
  */
-public class main extends Application {
+public class Main extends Application {
 
     /**
      * Diese Instanz der Klasse Main
      */
-    private static main instance;
+    private static Main instance;
 
     /**
      * Hauptfenster/Stage der Anwendung
@@ -55,7 +55,7 @@ public class main extends Application {
      *
      * @return Diese Instanz der Klasse Main
      */
-    public static main getInstance() {
+    public static Main getInstance() {
         return instance;
     }
 
@@ -83,7 +83,7 @@ public class main extends Application {
     public void loadMainview() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("Mainview.fxml"));
         Scene scene = new Scene(root);
-        thisStage.setTitle("Mainview");
+        thisStage.setTitle("Konten");
         thisStage.setScene(scene);
         thisStage.show();
     }
@@ -97,7 +97,7 @@ public class main extends Application {
         selectedAccount = account;
         Parent root = FXMLLoader.load(getClass().getResource("Accountview.fxml"));
         Scene scene = new Scene(root);
-        thisStage.setTitle("Accountview");
+        thisStage.setTitle(selectedAccount);
         thisStage.setScene(scene);
         thisStage.show();
     }
